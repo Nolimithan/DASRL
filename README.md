@@ -1,5 +1,5 @@
 # Dancing with markets: A dynamic rebalancing mechanism using deep reinforcement learning for online portfolio selection
-![Uploading Figure_1.jpg…]()
+![Figure abstract](Figure_1.jpg)
 
 # DASRL Long Mode: LIM-PPO Portfolio Optimization Framework
 
