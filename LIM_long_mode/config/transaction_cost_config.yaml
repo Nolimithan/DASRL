@@ -1,0 +1,108 @@
+﻿ablation:
+  run_equal_weight: true
+  run_fixed_15day: true
+  run_fixed_30day: true
+  run_fixed_60day: true
+  run_fixed_90day: true
+  run_literature_rl: true
+  run_mean_var: true
+  run_momentum: true
+  run_no_LIM: true
+  run_random_rebalance: true
+baseline:
+  weights_file: transaction_cost_analysis_results\baseline_weights.csv
+data:
+  benchmark: '512760'
+  end_date: '2024-04-05'
+  start_date: '2019-06-12'
+  symbols:
+  - '688981'
+  - '002371'
+  - '603501'
+  - '002049'
+  - '603986'
+  - '688012'
+  - '300458'
+  - '300782'
+  - '688037'
+  - '603290'
+  - '300223'
+  - '300661'
+  - '600745'
+  - '688099'
+  - '688008'
+  - '688126'
+  - '600584'
+  - '688396'
+  - '603160'
+  - '688521'
+  - '688516'
+  - '688536'
+  - '688256'
+  - '300604'
+  - '688187'
+  - '300671'
+  - '688200'
+  - '688233'
+  - '688268'
+  - '603690'
+environment:
+  commission_rate: 0.003
+  initial_capital: 1000000
+  portfolio_size: 3
+  rebalance_period: 30
+  stop_loss_threshold: 0.15
+features:
+  fundamental_features:
+  - PE
+  - PB
+  - ROE
+  - NET_PROFIT_YOY
+  technical_indicators:
+  - SMA20
+  - SMA60
+  - EMA12
+  - EMA26
+  - MACD
+  - RSI14
+  - ATR
+  - BOLL_UPPER
+  - BOLL_LOWER
+  - VOL20
+lim:
+  alpha: 0.5
+  min_LIM_value: 0.1
+  rebalance_threshold: 0.3
+  window_size: 60
+  lookback_days: 90
+paths:
+  data_path: data/
+  model_load_path: models/ppo_model
+  model_save_path: models/ppo_model
+  results_path: results/
+  visualization_path: visualization/
+portfolio:
+  initial_capital: 1000000
+  min_holding_days: 10
+  min_stock_count: 3
+  size: 3
+rl:
+  clip_ratio: 0.2
+  entropy_coef: 0.01
+  epochs: 500
+  gamma: 0.98
+  learning_rate: 0.0003
+  reward_params:
+    lambda_1: 0.5
+    lambda_2: 0.2
+    lambda_3: 1.0
+  steps_per_epoch: 2000
+  value_coef: 0.5
+trading:
+  commission_rate: 0.003
+  max_stop_loss: 0.21
+  rebalance_period: 30
+  stop_loss_increment: 0.03
+  stop_loss_threshold: 0.15
+  target_cash_ratio: 0.3
+

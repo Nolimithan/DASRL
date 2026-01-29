@@ -1,0 +1,121 @@
+ablation:
+  run_equal_weight: true
+  run_literature_rl: true
+  run_mean_var: true
+  run_momentum: true
+  run_no_SIM: true
+data:
+  data_source: 'nasdaq'  # 指定使用纳斯达克数据源
+  end_date: '2024-04-05'  
+  start_date: '2019-06-12'
+  data_dir: 'data/nasdaq_etf'  # 纳斯达克数据存储目录
+  symbols:
+    # SOXX ETF 主要成分股 - 按权重排序
+    - 'AVGO'  # Broadcom Inc.
+    - 'NVDA'  # NVIDIA Corporation
+    - 'TXN'   # Texas Instruments Incorporated
+    - 'QCOM'  # QUALCOMM Incorporated
+    - 'AMD'   # Advanced Micro Devices, Inc.
+    - 'KLAC'  # KLA Corporation
+    - 'AMAT'  # Applied Materials, Inc.
+    - 'LRCX'  # Lam Research Corporation
+    - 'INTC'  # Intel Corporation
+    - 'MPWR'  # Monolithic Power Systems, Inc.
+    - 'NXPI'  # NXP Semiconductors N.V.
+    - 'ASML'  # ASML Holding N.V.
+    - 'ADI'   # Analog Devices, Inc.
+    - 'MU'    # Micron Technology, Inc.
+    - 'TSM'   # Taiwan Semiconductor Manufacturing Company Limited
+    - 'MCHP'  # Microchip Technology Incorporated
+    - 'MRVL'  # Marvell Technology, Inc.
+    - 'ON'    # ON Semiconductor Corporation
+    - 'TER'   # Teradyne, Inc.
+    - 'QRVO'  # Qorvo, Inc.
+    - 'SWKS'  # Skyworks Solutions, Inc.
+    - 'LSCC'  # Lattice Semiconductor Corporation
+    - 'SMTC'  # Semtech Corporation
+    - 'WOLF'  # Wolfspeed
+    - 'STM'   # STMicroelectronics N.V.
+    - 'OLED'  # Universal Display Corporation
+    - 'SWKS'   # Skyworks Solutions, Inc.
+    - 'NTNX'  # Nutanix
+    - 'DIOD'  # Diodes Incorporated
+    - 'POWI'  # Power Integrations
+  benchmark: 'SOXX'  # 半导体ETF作为基准
+environment:
+  portfolio_size: 3
+  initial_capital: 1000000
+  commission_rate: 0.003  
+  rebalance_period: 30
+  atr_window: 14
+  volatility_range: [0.5, 2.0]
+  enable_stop_loss: False
+  trend_adjustment: true
+  group_type: 'TOP'  # 使用顶部组，选项: TOP, MIDDLE, LOW
+features:
+  pca_components: 20
+  technical_indicators:
+    - 'daily_return'
+    - 'volatility'
+    - 'momentum'
+    - 'rsi_14'
+    - 'macd'
+    - 'bb_width'
+    - 'atr_14'
+    - 'relative_strength'
+    - 'volume_change'
+  use_pca: false
+sim:  # 注意这里使用SIM而不是LIM
+  window_size: 60
+  alpha: 0.5
+  lookback_days: 90
+  commission_rate: 0.005
+paths:
+  model_load_path: models/nasdaq_short_model  # 做空专用模型路径
+  model_save_path: models/nasdaq_short_model
+  visualization_path: visualization/nasdaq_short
+  results_path: results/nasdaq_short
+portfolio:
+  initial_capital: 1000000
+  size: 3
+rl:
+  action_dim: 3
+  clip_ratio: 0.2
+  entropy_coef: 0.01
+  epochs: 1
+  gamma: 0.98
+  learning_rate: 0.0003
+  reward_params:
+    # 基础奖励参数
+    base_reward_scale: 3.0    # 日收益率的乘数
+    
+    # 基于初始资金的梯度奖励参数
+    capital_reward_pos_step: 0.2    # 每高于初始资金10%增加的奖励
+    capital_reward_neg_step: 0.05    # 每低于初始资金5%增加的惩罚
+    
+    # 以下参数保留用于向后兼容，但在新的奖励计算中不再使用
+    positive_tiers: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  # 收益率梯度
+    positive_rewards: [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]  # 对应奖励
+    negative_tiers: [-0.05, -0.1, -0.15, -0.2, -0.25, -0.3, -0.35, -0.4, -0.45, -0.5]  # 损失率梯度
+    negative_rewards: [-0.25, -0.5, -0.75, -1.0, -1.25, -1.5, -1.75, -2.0, -2.25, -2.5]  # 对应惩罚
+    
+    # 横向梯度奖励参数（连续上涨天数）
+    min_consecutive_days: 2    # 最少连续上涨天数才获得奖励
+    consecutive_base_reward: 0.02  # 基础连续上涨奖励
+    consecutive_step_reward: 0.01  # 每多一天的额外奖励
+    max_consecutive_reward: 1.0   # 最大连续上涨奖励上限
+    
+    # 周期末奖励参数
+    end_period_reward: 1.0    # 投资周期末盈利的额外奖励
+    
+    # 奖励约束
+    reward_min: -1.0  # 最小奖励值限制
+    reward_max: 1.0  # 最大奖励值限制
+  state_dim: 50
+  steps_per_epoch: 1000
+  value_coef: 0.5
+trading:
+  commission_rate: 0.003 # 美股佣金率
+  min_holding_period: 5
+  max_position_size: 0.3
+  stop_loss_threshold: 0.1 

@@ -1,0 +1,101 @@
+data:
+  start_date: '2024-01-01'
+  end_date: '2024-12-31'
+  symbols:
+  - '688981'
+  - '002371'
+  - '603501'
+  - '002049'
+  - '603986'
+  - '688012'
+  - '300458'
+  - '300782'
+  - '688037'
+  - '603290'
+  - '300223'
+  - '300661'
+  - '600745'
+  - '688099'
+  - '688008'
+  - '688126'
+  - '600584'
+  - '688396'
+  - '603160'
+  - '688521'
+  - '688516'
+  - '688536'
+  - '688256'
+  - '300604'
+  - '688187'
+  - '300671'
+  - '688200'
+  - '688233'
+  - '688268'
+  - '603690'
+  benchmark: '000001'
+lim:
+  window_size: 60
+  min_LIM_value: 0.1
+  rebalance_threshold: 0.3
+portfolio:
+  size: 3
+  initial_capital: 1000000
+  min_stock_count: 3
+  min_holding_days: 10
+trading:
+  commission_rate: 0.003
+  rebalance_period: 30
+  stop_loss_threshold: 0.15
+  stop_loss_increment: 0.03
+  max_stop_loss: 0.21
+  target_cash_ratio: 0.3
+rl:
+  learning_rate: 0.0003
+  gamma: 0.98
+  clip_ratio: 0.2
+  value_coef: 0.5
+  entropy_coef: 0.01
+  epochs: 500
+  steps_per_epoch: 2000
+  reward_params:
+    lambda_1: 0.5
+    lambda_2: 0.2
+    lambda_3: 1.0
+features:
+  technical_indicators:
+  - SMA20
+  - SMA60
+  - EMA12
+  - EMA26
+  - MACD
+  - RSI14
+  - ATR
+  - BOLL_UPPER
+  - BOLL_LOWER
+  - VOL20
+  fundamental_features:
+  - PE
+  - PB
+  - ROE
+  - NET_PROFIT_YOY
+paths:
+  model_save_path: models/ppo_model
+  model_load_path: models/ppo_model
+  data_path: data/
+  results_path: results/
+  visualization_path: visualization/
+environment:
+  portfolio_size: 3
+  initial_capital: 1000000
+  commission_rate: 0.003
+  stop_loss_threshold: 0.15
+  rebalance_period: 30
+ablation:
+  run_equal_weight: true
+  run_momentum: true
+  run_mean_var: true
+  run_no_LIM: true
+  run_no_exit_rule: true
+  run_no_cov_penalty: true
+  run_fixed_30day: true
+  run_literature_rl: true

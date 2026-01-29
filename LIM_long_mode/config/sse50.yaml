@@ -1,0 +1,159 @@
+ablation:
+  run_equal_weight: true
+  run_literature_rl: true
+  run_mean_var: true
+  run_momentum: true
+  run_fixed_15day: true
+  run_fixed_60day: true
+  run_fixed_90day: true
+  run_random_rebalance: true
+  run_no_LIM: true
+  run_sharpe_selection: true
+  run_sortino_selection: true
+data:
+  data_source: 'local'  # Use local CSV data
+  data_dir: 'D:/RL experiment/data/sse50'  # SSE50 local data directory (absolute path)
+  end_date: '2024-04-05'
+  start_date: '2019-06-12'
+  symbols:
+    - '688981'
+    - '688256'
+    - '688111'
+    - '688041'
+    - '688012'
+    - '688008'
+    - '603993'
+    - '603501'
+    - '603259'
+    - '603019'
+    - '601988'
+    - '601985'
+    - '601919'
+    - '601899'
+    - '601888'
+    - '601857'
+    - '601816'
+    - '601728'
+    - '601668'
+    - '601658'
+    - '601628'
+    - '601601'
+    - '601398'
+    - '601328'
+    - '601318'
+    - '601288'
+    - '601225'
+    - '601211'
+    - '601166'
+    - '601127'
+  benchmark: '000016'  # SSE 50 Index
+environment:
+  portfolio_size: 3
+  initial_capital: 1000000
+  commission_rate: 0.003
+  stop_loss_threshold: 0.1
+  rebalance_period: 30
+  atr_window: 14
+  volatility_range:
+  - 0.5
+  - 2.0
+  enable_stop_loss: false
+  trend_adjustment: true
+  group_type: TOP
+features:
+  pca_components: 20
+  technical_indicators:
+  - daily_return
+  - volatility
+  - momentum
+  - rsi_14
+  - macd
+  - bb_width
+  - atr_14
+  - relative_strength
+  - volume_change
+  use_pca: false
+lim:
+  window_size: 60
+  alpha: 0.5
+  lookback_days: 90
+  commission_rate: 0.005
+paths:
+  model_load_path: models/sse50_model
+  model_save_path: models/sse50_model
+  visualization_path: visualization/sse50
+  results_path: results/sse50
+portfolio:
+  initial_capital: 1000000
+  size: 3
+rl:
+  action_dim: 3
+  clip_ratio: 0.2
+  entropy_coef: 0.01
+  epochs: 500
+  gamma: 0.98
+  learning_rate: 0.0003
+  reward_params:
+    base_reward_scale: 3.0
+    capital_reward_pos_step: 0.2
+    capital_reward_neg_step: 0.05
+    positive_tiers:
+    - 0.1
+    - 0.2
+    - 0.3
+    - 0.4
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    - 0.9
+    - 1.0
+    positive_rewards:
+    - 2.0
+    - 4.0
+    - 6.0
+    - 8.0
+    - 10.0
+    - 12.0
+    - 14.0
+    - 16.0
+    - 18.0
+    - 20.0
+    negative_tiers:
+    - -0.05
+    - -0.1
+    - -0.15
+    - -0.2
+    - -0.25
+    - -0.3
+    - -0.35
+    - -0.4
+    - -0.45
+    - -0.5
+    negative_rewards:
+    - -0.25
+    - -0.5
+    - -0.75
+    - -1.0
+    - -1.25
+    - -1.5
+    - -1.75
+    - -2.0
+    - -2.25
+    - -2.5
+    min_consecutive_days: 2
+    consecutive_base_reward: 0.02
+    consecutive_step_reward: 0.01
+    max_consecutive_reward: 1.0
+    end_period_reward: 1.0
+    reward_min: -7.0
+    reward_max: 14.0
+  state_dim: 50
+  steps_per_epoch: 1000
+  value_coef: 0.5
+trading:
+  commission_rate: 0.003
+  min_holding_period: 5
+  max_position_size: 0.3
+  stop_loss_threshold: 0.1
+
